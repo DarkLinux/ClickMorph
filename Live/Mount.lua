@@ -26,9 +26,11 @@ function f:InitMountJournal()
 		self:CreateUnlockButton()
 		-- modelscene
 		MountJournal.MountDisplay.ModelScene:HookScript("OnMouseUp", CM.MorphMountModelScene)
-		-- scrollframe buttons
-		for _, button in pairs(MountJournal.ListScrollFrame.buttons) do
-			button:HookScript("OnClick", CM.MorphMountScrollFrame)
+		-- scrollframe buttons if they exist
+		if (MountJournal.ListScrollFrame~=nil) then 
+			for _, button in pairs(MountJournal.ListScrollFrame.buttons) do
+				button:HookScript("OnClick", CM.MorphMountScrollFrame)
+			end
 		end
 	end)
 end
