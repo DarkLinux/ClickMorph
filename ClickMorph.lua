@@ -126,6 +126,9 @@ CM.morphers = {
 	iMorph = { -- classic
 		-- morphers can be unloaded and initialized at any later moment
 		loaded = function() return IMorphInfo end,
+		update = function(unit)
+			UpdateModel(unit)
+		end,
 		reset = function() -- todo: add reset to naked
 			iMorphFrame:Reset()
 			wipe(ClickMorph_iMorphV1)
@@ -145,18 +148,27 @@ CM.morphers = {
 		item = function(_, slotID, itemID)
 			SetItem(slotID, itemID)
 		end,
+		enchant = function(unit, slotID, visualID)
+			SetVisibleEnchant(unit, slotID, visualID)
+			UpdateModel(unit)
+		end,
 		scale = function(_, value)
 			SetScale(value)
 			ClickMorph_iMorphV1.tempscale = value -- workaround
 		end,
-		--SetEnchant(slotId, enchantId)
-		--SetTitle(titleId)
-		--SetMedal(medalId)
-		--SetFace(face)
-		--SetFeatures(feature)
-		--SetHairStyle(style)
-		--SetHairColor(color)
-		--SetSkinColor(color)
+		-- spell (nyi)
+		-- title
+		-- scale
+		-- skin
+		-- face
+		-- hair
+		-- haircolor
+		-- piercings
+		-- tattoos
+		-- horns
+		-- blindfold
+		-- shapeshift
+		-- weather
 	},
 	jMorph = { -- retail
 		loaded = function() return jMorphLoaded end,
@@ -360,7 +372,7 @@ function CM:MorphModel(unit, displayID, npcID, npcName, override)
 end
 
 -- Appearances
-function CM.MorphTransmogSet() -- retail
+function CM.MorphTransmogSet(unit, item, silent) -- retail
 	local morph = CM:CanMorph()
 	if morph and morph.item then
 		local setID = WardrobeCollectionFrame.SetsCollectionFrame.selectedSetID
@@ -369,9 +381,13 @@ function CM.MorphTransmogSet() -- retail
 		for _, v in pairs(WardrobeSetsDataProviderMixin:GetSortedSetSources(setID)) do
 			local source = C_TransmogCollection.GetSourceInfo(v.sourceID)
 			local slotID = C_Transmog.GetSlotForInventoryType(v.invType)
-			morph.item("player", CM.SlotNames[slotID], source.itemID, source.itemModID)
+			--OLD
+			--morph.item("player", CM.SlotNames[slotID], source.itemID, source.itemModID)
+
+			--NEW
+			morph.item("player", slotID, source.itemID, source.itemModID)
 		end
-		morph.update("player")
+		--morph.update("player")
 		CM:PrintChat(format("itemset -> |cff71D5FF%d|r |cffFFFF00%s|r (%s)", setID, setInfo.name, setInfo.description or ""))
 	end
 end

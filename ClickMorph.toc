@@ -1,12 +1,11 @@
-## Interface-Retail: 90005
-## Interface-Classic: 11307
-## Interface-BCC: 20501
-## Version: @project-version@
+## Interface: 90005
+## Version: 1.7.3
 ## Title: ClickMorph
 ## Notes: Lets you alt-click to morph
 ## Author: Ketho, Icesythe7
 ## SavedVariables: ClickMorphDB
 ## SavedVariablesPerCharacter: ClickMorph_iMorphV1
+##Dependencies: iMorph
 
 Libs\LibStub\LibStub.lua
 Libs\StdUiV2\StdUi.xml
