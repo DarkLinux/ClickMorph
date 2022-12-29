@@ -129,9 +129,8 @@ CM.morphers = {
 		update = function(unit)
 			UpdateModel(unit)
 		end,
-		reset = function() -- todo: add reset to naked
-			iMorphFrame:Reset()
-			wipe(ClickMorph_iMorphV1)
+		reset = function()
+			CM:ResetMorph()
 		end,
 		model = function(_, displayID)
 			Morph(displayID)
@@ -224,16 +223,15 @@ CM.morphers = {
 }
 
 function CM:ResetMorph()
-	local morph = self:CanMorph(true)
-	if morph then
-		if morph.reset then
-			morph.reset()
+	local morph = CM:CanMorph()
+	if morph and morph.item then
+		local setID = WardrobeCollectionFrame.SetsCollectionFrame.selectedSetID
+
+		for i=0,19 do
+			morph.item("player", i, 0)
 		end
-		--[[ resetting the scale slider already sets the value to 1
-		if morph.scale then -- imorph doesnt reset scale
-			morph.scale("player", 1)
-		end
-		]]
+
+		CM:PrintChat("reset morph")
 	end
 end
 
@@ -375,19 +373,15 @@ end
 function CM.MorphTransmogSet(unit, item, silent) -- retail
 	local morph = CM:CanMorph()
 	if morph and morph.item then
+		morph.reset()
 		local setID = WardrobeCollectionFrame.SetsCollectionFrame.selectedSetID
 		local setInfo = C_TransmogSets.GetSetInfo(setID)
 
 		for _, v in pairs(WardrobeSetsDataProviderMixin:GetSortedSetSources(setID)) do
 			local source = C_TransmogCollection.GetSourceInfo(v.sourceID)
 			local slotID = C_Transmog.GetSlotForInventoryType(v.invType)
-			--OLD
-			--morph.item("player", CM.SlotNames[slotID], source.itemID, source.itemModID)
-
-			--NEW
 			morph.item("player", slotID, source.itemID, source.itemModID)
 		end
-		--morph.update("player")
 		CM:PrintChat(format("itemset -> |cff71D5FF%d|r |cffFFFF00%s|r (%s)", setID, setInfo.name, setInfo.description or ""))
 	end
 end
