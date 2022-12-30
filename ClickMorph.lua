@@ -369,9 +369,9 @@ function CM.MorphTransmogSet() -- retail
 		for _, v in pairs(WardrobeSetsDataProviderMixin:GetSortedSetSources(setID)) do
 			local source = C_TransmogCollection.GetSourceInfo(v.sourceID)
 			local slotID = C_Transmog.GetSlotForInventoryType(v.invType)
-			morph.item("player", CM.SlotNames[slotID], source.itemID, source.itemModID)
+			morph.item("player", slotID, source.itemID, source.itemModID)
 		end
-		morph.update("player")
+		--morph.update("player")
 		CM:PrintChat(format("itemset -> |cff71D5FF%d|r |cffFFFF00%s|r (%s)", setID, setInfo.name, setInfo.description or ""))
 	end
 end

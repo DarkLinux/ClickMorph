@@ -1,10 +1,10 @@
-## Interface-Retail: 90005
-## Interface-Classic: 11307
-## Interface-BCC: 20501
+## Interface-Retail: 100002
+## Interface-Classic: 11403
+## Interface-WotLKClassic: 30400
 ## Version: @project-version@
 ## Title: ClickMorph
 ## Notes: Lets you alt-click to morph
-## Author: Ketho, Icesythe7
+## Author: Ketho, Icesythe7, DarkLinux
 ## SavedVariables: ClickMorphDB
 ## SavedVariablesPerCharacter: ClickMorph_iMorphV1
 
