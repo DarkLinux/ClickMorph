@@ -84,7 +84,8 @@ function f:UnlockTimer(elapsed)
 	end
 end
 
-if IsAddOnLoaded("Blizzard_Collections") then
+local _, loaded = C_AddOns.IsAddOnLoaded("Blizzard_Collections")
+if loaded then
     f:InitWardrobe()
 else
     f:RegisterEvent("ADDON_LOADED")
@@ -107,7 +108,8 @@ function f:InitWardrobe()
 		active = true
 
 		ItemsCollection = WardrobeCollectionFrame.ItemsCollectionFrame
-		IsWardRobeSortLoaded = IsAddOnLoaded("WardRobeSort")
+		local _, loaded = C_AddOns.IsAddOnLoaded("WardRobeSort")
+		IsWardRobeSortLoaded = loaded
 
 		-- item sets
 		WardrobeCollectionFrame.SetsCollectionFrame.Model:HookScript("OnMouseUp", CM.MorphTransmogSet)

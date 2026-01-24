@@ -1,15 +1,13 @@
-## Interface-Retail: 100002
-## Interface-Classic: 11403
-## Interface-WotLKClassic: 30400
-## Version: @project-version@
+## Interface: 120000, 11508
+## Version: 1.0.1
 ## Title: ClickMorph
 ## Notes: Lets you alt-click to morph
 ## Author: Ketho, Icesythe7, DarkLinux
 ## SavedVariables: ClickMorphDB
 ## SavedVariablesPerCharacter: ClickMorph_iMorphV1
 
-Libs\LibStub\LibStub.lua
-Libs\StdUiV2\StdUi.xml
+## Libs\LibStub\LibStub.lua
+## Libs\StdUiV2\StdUi.xml
 
 ClickMorph.lua
 Database.lua
@@ -17,7 +15,7 @@ Database.lua
 iMorph\iMorphV1.lua
 iMorph\iMorphLua.lua
 
-Gui.lua
+## Gui.lua
 Npc.lua
 Inspect.lua
 Compat.lua
