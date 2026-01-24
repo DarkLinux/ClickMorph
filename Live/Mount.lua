@@ -4,7 +4,8 @@ if not CM.isRetail then return end
 local f = CreateFrame("Frame")
 local active
 
-if IsAddOnLoaded("Blizzard_Collections") then
+local _, loaded = C_AddOns.IsAddOnLoaded("Blizzard_Collections")
+if loaded then
     f:InitMountJournal()
 else
     f:RegisterEvent("ADDON_LOADED")

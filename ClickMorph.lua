@@ -103,8 +103,7 @@ function CM:CanMorph(override)
 				return morpher
 			end
 		end
-		local name = CM.isRetail and "jMorph" or "iMorph"
-		self:PrintChat("Could not find |cffFFFF00"..name.."|r. Make sure it is loaded before you use ClickMorph.", 1, 1, 0)
+		self:PrintChat("Could not find |cffFFFF00iMorph|r. Make sure it is loaded before you use ClickMorph.", 1, 1, 0)
 	end
 end
 
@@ -142,8 +141,8 @@ CM.morphers = {
 				return true
 			end
 		end,
-		item = function(_, slotID, itemID)
-			SetItem(slotID, itemID)
+		item = function(_, slotID, itemID, itemModID)
+			SetItem(tonumber(slotID), tonumber(itemID), tonumber(itemModID))
 		end,
 		scale = function(_, value)
 			SetScale(value)
@@ -157,58 +156,7 @@ CM.morphers = {
 		--SetHairStyle(style)
 		--SetHairColor(color)
 		--SetSkinColor(color)
-	},
-	jMorph = { -- retail
-		loaded = function() return jMorphLoaded end,
-		update = function(unit)
-			UpdateModel(unit)
-		end,
-		model = function(unit, displayID)
-			SetDisplayID(unit, displayID)
-			UpdateModel(unit)
-		end,
-		race = function(unit, raceID)
-			SetDisplayID(unit, 0)
-			SetAlternateRace(unit, raceID)
-			UpdateModel(unit)
-		end,
-		gender = function(unit, genderID, raceID)
-			SetGender(unit, genderID)
-			SetAlternateRace(unit, raceID)
-			UpdateModel(unit)
-		end,
-		mount = function(unit, displayID)
-			if CM:CanMorphMount() then
-				SetMountDisplayID(unit, displayID)
-				MorphPlayerMount()
-				return true
-			end
-		end,
-		item = function(unit, slotID, itemID, itemModID)
-			SetVisibleItem(unit, slotID, itemID, itemModID)
-			-- dont automatically update for every item in an item set
-		end,
-		enchant = function(unit, slotID, visualID)
-			SetVisibleEnchant(unit, slotID, visualID)
-			UpdateModel(unit)
-		end,
-		scale = function(unit, value)
-			SetScale(unit, value)
-		end,
-		-- spell (nyi)
-		-- title
-		-- scale
-		-- skin
-		-- face
-		-- hair
-		-- haircolor
-		-- piercings
-		-- tattoos
-		-- horns
-		-- blindfold
-		-- shapeshift
-		-- weather
-	},
+	}
 }
 
 function CM:ResetMorph()
@@ -244,18 +192,20 @@ function CM:MorphMount(unit, mountID)
 			local multipleIDs = C_MountJournal.GetMountAllCreatureDisplayInfoByID(mountID)
 			displayID = multipleIDs[random(#multipleIDs)].creatureDisplayID
 		end
-		if morph.mount(unit, displayID) then
-			CM:PrintChat(format("mount -> |cffFFFF00%d|r %s", displayID, GetSpellLink(spellID)))
-		end
+		morph.mount(unit, displayID) 
+		--if morph.mount(unit, displayID) then
+		--	CM:PrintChat(format("mount -> |cffFFFF00%d|r %s", displayID, GetSpellLink(spellID)))
+		--end
 	end
 end
 
 function CM:MorphMountClassic(unit, displayID, spellID, override)
 	local morph = self:CanMorph(override)
 	if morph and morph.mount then
-		if morph.mount(unit, displayID) then
-			CM:PrintChat(format("mount -> |cffFFFF00%d|r %s", displayID, GetSpellLink(spellID)))
-		end
+		morph.mount(unit, displayID)
+		--if morph.mount(unit, displayID) then
+		--	CM:PrintChat(format("mount -> |cffFFFF00%d|r %s", displayID, GetSpellLink(spellID)))
+		--end
 	end
 end
 
@@ -264,8 +214,24 @@ function CM.MorphMountModelScene()
 	CM:MorphMount("player", mountID)
 end
 
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
+
 function CM.MorphMountScrollFrame(frame)
 	local mountID = select(12, C_MountJournal.GetDisplayedMountInfo(frame.index))
+	-- CM:PrintChat(format("mount -> |cffFFFF00%d|r %d %d", frame.index, mountID))
+	-- CM:PrintChat(tostring(frame))
+	-- CM:PrintChat(dump(frame))
 	CM:MorphMount("player", mountID)
 end
 
@@ -328,10 +294,9 @@ function CM:MorphItemBySource(unit, source, silent)
 	if morph and morph.item then
 		local slotID = C_Transmog.GetSlotForInventoryType(source.invType)
 		slotID = self:GetDualWieldSlot(slotID)
-		local itemLink = select(6, C_TransmogCollection.GetAppearanceSourceInfo(source.sourceID))
+		local itemLink = C_TransmogCollection.GetAppearanceSourceInfo(source.sourceID)["itemLink"]
 		local itemText = itemLink:find("%[%]") and CM.ItemAppearance and CM.ItemAppearance[source.visualID] or itemLink
 		morph.item(unit, slotID, source.itemID, source.itemModID)
-		morph.update(unit)
 		local fullItemId = source.itemID..(source.itemModID > 0 and ":"..source.itemModID or "")
 		if not silent then
 			self:PrintChat(format("|cffFFFF00%s|r -> item |cff71D5FF%s|r %s", CM.SlotNames[slotID], fullItemId, itemText))
@@ -380,7 +345,7 @@ function CM.MorphTransmogItem(frame) -- retail
 	local loc = WardrobeCollectionFrame.ItemsCollectionFrame.transmogLocation
 	local visualID = frame.visualInfo.visualID
 
-	if loc.transmogType == Enum.TransmogType.Illusion then
+	if loc:IsIllusion() then
 		local slotID = GetInventorySlotInfo(loc.slotID)
 		local name
 		if frame.visualInfo.sourceID then
@@ -388,8 +353,11 @@ function CM.MorphTransmogItem(frame) -- retail
 			name = #link > 0 and link
 		end
 		CM:MorphEnchant("player", slotID, visualID, name or CM.ItemVisuals[visualID])
-	elseif loc.transmogType == Enum.TransmogType.Appearance then
-		local sources = WardrobeCollectionFrame_GetSortedAppearanceSources(visualID)
+	elseif loc:IsAppearance() then
+		local modificationType = Enum.TransmogModification.Main;
+		local category = C_TransmogCollection.GetCategoryForItem(loc.slotID);
+		local transmogLocation = TransmogUtil.CreateTransmogLocation(loc.slotID, Enum.TransmogType.Appearance, modificationType);
+		local sources = CollectionWardrobeUtil.GetSortedAppearanceSources(visualID, category, transmogLocation);
 		for idx, source in pairs(sources) do
 			-- get the index the arrow is pointing at
 			if idx == WardrobeCollectionFrame.tooltipSourceIndex then
