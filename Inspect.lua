@@ -26,7 +26,8 @@ function f:OnEvent(event, addon)
 	end
 end
 
-if C_AddOns.IsAddOnLoaded("Blizzard_InspectUI") then
+local _, loaded = C_AddOns.IsAddOnLoaded("Blizzard_InspectUI")
+if loaded then
 	f:InitializeInspect()
 else
 	f:RegisterEvent("ADDON_LOADED")

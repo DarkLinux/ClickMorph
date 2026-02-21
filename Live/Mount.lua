@@ -4,7 +4,8 @@ if not CM.isRetail then return end
 local f = CreateFrame("Frame")
 local active
 
-if IsAddOnLoaded("Blizzard_Collections") then
+local _, loaded = C_AddOns.IsAddOnLoaded("Blizzard_Collections")
+if loaded then
     f:InitMountJournal()
 else
     f:RegisterEvent("ADDON_LOADED")
@@ -27,8 +28,9 @@ function f:InitMountJournal()
 		-- modelscene
 		MountJournal.MountDisplay.ModelScene:HookScript("OnMouseUp", CM.MorphMountModelScene)
 		-- scrollframe buttons
-		for _, button in pairs(MountJournal.ListScrollFrame.buttons) do
-			button:HookScript("OnClick", CM.MorphMountScrollFrame)
+		local _, buttons, _ = MountJournal.ScrollBox:EnumerateFrames()
+		for _, button in pairs(buttons) do
+			button:HookScript("OnClick", CM.MorphMountScrollFrame) 
 		end
 	end)
 end
