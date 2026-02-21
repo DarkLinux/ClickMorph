@@ -113,10 +113,6 @@ function f:InitWardrobe()
 
 		-- item sets
 		WardrobeCollectionFrame.SetsCollectionFrame.Model:HookScript("OnMouseUp", CM.MorphTransmogSet)
-		-- items
-		for _, model in pairs(ItemsCollection.Models) do
-			model:HookScript("OnMouseUp", CM.MorphTransmogItem)
-		end
 
 		ScanningModel = CreateFrame("DressUpModel")
 		ScanningModel:SetUnit("player")
@@ -155,7 +151,7 @@ function f:InitializeData()
 	end
 	db = ClickMorphDataDB
 
-	local version = GetAddOnMetadata("ClickMorph", "Version")
+	local version = C_AddOns.GetAddOnMetadata("ClickMorph", "Version")
 	if not db.SourceInfo then
 		CM:PrintChat(format("|cff71D5FFv%s|r Rebuilding data..", version))
 		db.SourceInfo, db.IllusionSourceInfo = self:QueryData()
