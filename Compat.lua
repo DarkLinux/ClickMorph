@@ -1,5 +1,5 @@
 local CM = ClickMorph
-if CM.isClassic then return end
+if CM.isRetail then return end
 
 local addons = {
 	"MogIt",
@@ -11,8 +11,7 @@ local addons = {
 function OnEvent(self, event, isInitialLogin, isReloadingUi)
 	if isInitialLogin or isReloadingUi then
 		for _, addon in pairs(addons) do
-			local _, loaded = C_AddOns.IsAddOnLoaded(addon)
-			if loaded then
+			if C_AddOns.IsAddOnLoaded(addon) then
 				CM[addon](CM)
 			end
 		end
@@ -167,7 +166,7 @@ local shownAtlasLootMessage
 local SEC_BUTTON_COUNT = 0
 
 local function IsAtlasLootKeybind()
-	return if IsAltKeyDown()
+	return IsAltKeyDown() and IsShiftKeyDown()
 end
 
 local function HookAtlasLootButton(btn)
@@ -185,7 +184,7 @@ end
 
 function CM:AtlasLootClassic()
 	_G["AtlasLoot_GUI-Frame"]:HookScript("OnShow", function()
-		if Morph and not shownAtlasLootMessage then
+		if IMorphInfo and not shownAtlasLootMessage then
 			self:PrintChat("For AtlasLoot you need to press |cff71D5FFAlt+Shift|r while clicking")
 			shownAtlasLootMessage = true
 		end
