@@ -2,6 +2,7 @@
 ## Interface-Classic: 11508
 ## Interface-BCC: 20505
 ## Title: ClickMorphData
+## IconTexture: Interface\AddOns\ClickMorphData\icon
 ## Author: Ketho
 ## Notes: Load on Demand FileData
 ## LoadOnDemand: 1

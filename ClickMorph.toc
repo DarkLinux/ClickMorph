@@ -1,6 +1,7 @@
 ## Interface: 120000, 50503, 20505, 11508
 ## Version: 1.7.4
 ## Title: ClickMorph
+## IconTexture: Interface\AddOns\ClickMorph\icon
 ## Notes: Lets you alt-click to morph
 ## Author: Ketho, Icesythe7, DarkLinux
 ## SavedVariables: ClickMorphDB
