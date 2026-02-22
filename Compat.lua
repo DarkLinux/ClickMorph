@@ -167,7 +167,7 @@ local shownAtlasLootMessage
 local SEC_BUTTON_COUNT = 0
 
 local function IsAtlasLootKeybind()
-	return IsAltKeyDown() and IsShiftKeyDown()
+	return if IsAltKeyDown()
 end
 
 local function HookAtlasLootButton(btn)

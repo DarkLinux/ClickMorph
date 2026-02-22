@@ -79,11 +79,11 @@ end
 function CM:GetFileData(frame)
 	if not FileData then
 		local addon = "ClickMorphData"
-		local loaded, reason = LoadAddOn(addon)
+		local loaded, reason = C_AddOns.LoadAddOn(addon)
 		if not loaded then
 			if reason == "DISABLED" then
-				EnableAddOn(addon, true)
-				LoadAddOn(addon)
+				C_AddOns.EnableAddOn(addon, true)
+				C_AddOns.LoadAddOn(addon)
 			else
 				frame:SetScript("OnUpdate", nil) -- cancel any wardrobe timer
 				self:PrintChat("The ClickMorphData folder could not be found."
